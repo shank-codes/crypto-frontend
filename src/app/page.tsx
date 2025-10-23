@@ -3,10 +3,18 @@ import CoinTable from "@/components/CoinTable";
 export const revalidate = 60; // ISR every 1 min
 
 export default async function Page() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/coins`, {
-    next: { revalidate: 60 },
-  });
-  const coins = await res.json();
+  let coins: any[] = [];
+
+  try {
+    const res = await fetch(`${process.env.BACKEND_URL}/api/coins`);
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    coins = await res.json();
+  } catch (err) {
+    console.error("Error fetching coins:", err);
+    coins = []; // fallback to empty array
+  }
 
   return (
     <main className="p-6">
