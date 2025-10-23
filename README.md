@@ -2,6 +2,8 @@
 
 A responsive web UI built with **Next.js**, **React**, **Tailwind CSS**, and **Shadcn UI components** to display top 10 cryptocurrencies and interact with a chatbot assistant.
 
+[Crypto Dashboard](https://crypto-frontend-gamma.vercel.app/)
+
 ---
 
 ## Features
