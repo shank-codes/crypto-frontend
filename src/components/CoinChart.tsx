@@ -21,7 +21,11 @@ export default function CoinChart({ coin, onBack }: any) {
 
     const formatted = priceHistory.map(
       ({ date, price }: { date: string; price: number }) => ({
-        date: new Date(date).toLocaleDateString(),
+        shortDate: new Date(date).toLocaleDateString("en-US", {
+          day: "2-digit",
+          month: "short",
+        }), // e.g. "22 Oct"
+        fullDate: new Date(date).toDateString(), // e.g. "Wed Oct 22 2025"
         price,
       })
     );
@@ -45,10 +49,15 @@ export default function CoinChart({ coin, onBack }: any) {
 
       <ResponsiveContainer width="100%" height={400}>
         <LineChart data={data}>
-          <XAxis dataKey="date" />
+          <XAxis dataKey="shortDate" />
           <YAxis />
-          <Tooltip />
-          <Line type="monotone" dataKey="price" stroke="#3b82f6" dot={false} />
+          <Tooltip
+            labelFormatter={(label, payload) => {
+              const item = payload?.[0]?.payload;
+              return item ? item.fullDate : label;
+            }}
+          />
+          <Line type="monotone" dataKey="price" stroke="#3b82f6" dot={true} />
         </LineChart>
       </ResponsiveContainer>
     </div>

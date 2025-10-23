@@ -18,19 +18,6 @@ export function Navbar() {
       </Link>
 
       <nav className="flex items-center space-x-4">
-        <Link href="/market" className="text-sm font-medium hover:text-primary">
-          Market
-        </Link>
-        <Link
-          href="/portfolio"
-          className="text-sm font-medium hover:text-primary"
-        >
-          Portfolio
-        </Link>
-        <Link href="/news" className="text-sm font-medium hover:text-primary">
-          News
-        </Link>
-
         <ModeToggle />
       </nav>
     </header>
