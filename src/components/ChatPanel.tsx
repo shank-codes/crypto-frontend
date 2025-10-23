@@ -1,18 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import TrendMessage from "./TrendMessage";
 
-type chatType = { from: "user" | "bot"; text: string };
+type chatType = {
+  from: "user" | "bot";
+  text: string;
+  trend?: any;
+  type?: string;
+};
+
+const MAX_MESSAGES = 1000;
 
 export default function ChatPanel({ onClose }: { onClose: () => void }) {
   const [messages, setMessages] = useState<chatType[]>([]);
   const [input, setInput] = useState("");
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Initial bot greeting when chat opens
+    const greeting: chatType = {
+      from: "bot",
+      text: "👋 Hi! I'm your Crypto Assistant. You can ask me things like:\n• 'What is the price of Bitcoin?'\n• 'Show me the 7-day trend of Ethereum.'\n• 'What's the market cap of USDC?'",
+      type: "greeting",
+    };
+    setMessages([greeting]);
+  }, []);
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
 
     const userMsg: chatType = { from: "user", text: input };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => {
+      const updated = [...prev, userMsg];
+      return updated.length > MAX_MESSAGES
+        ? updated.slice(-MAX_MESSAGES)
+        : updated;
+    });
     setInput("");
 
     // Call your backend API
@@ -27,14 +54,26 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
       const botMsg: chatType = {
         from: "bot",
         text: data.message || "Sorry, I didn't understand.",
+        trend: data?.data?.trend,
+        type: data.type,
       };
-      setMessages((prev) => [...prev, botMsg]);
+      setMessages((prev) => {
+        const updated = [...prev, botMsg];
+        return updated.length > MAX_MESSAGES
+          ? updated.slice(-MAX_MESSAGES)
+          : updated;
+      });
     } catch (err) {
       const botMsg: chatType = {
         from: "bot",
         text: "Error connecting to server.",
       };
-      setMessages((prev) => [...prev, botMsg]);
+      setMessages((prev) => {
+        const updated = [...prev, botMsg];
+        return updated.length > MAX_MESSAGES
+          ? updated.slice(-MAX_MESSAGES)
+          : updated;
+      });
     }
   };
 
@@ -64,9 +103,19 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
                 : "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-200"
             }`}
           >
-            {msg.text}
+            {msg.type === "trend" ? (
+              <>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
+                  {msg.text}
+                </p>
+                <TrendMessage trendData={msg.trend} />
+              </>
+            ) : (
+              msg.text
+            )}
           </div>
         ))}
+        <div ref={chatEndRef} />
       </div>
 
       {/* Input */}
