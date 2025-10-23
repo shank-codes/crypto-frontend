@@ -6,7 +6,7 @@ export default async function Page() {
   let coins: any[] = [];
 
   try {
-    const res = await fetch(`${process.env.BACKEND_URL}/api/coins`);
+    const res = await fetch(`${process.env.BACKEND_URL}/api/v1/coins`);
 
     if (!res.ok) throw new Error("Failed to fetch");
 
