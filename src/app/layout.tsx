@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/Navbar";
+import ChatToggle from "@/components/ChatToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,8 +19,8 @@ export const metadata: Metadata = {
   title: "Crypto Dashboard App",
   description: "Try out crypto chat assistant",
   icons: {
-    icon: '/crypto-dash-icon.jpg'
-  }
+    icon: "/crypto-dash-icon.jpg",
+  },
 };
 
 export default function RootLayout({
@@ -39,7 +40,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          <main className="px-6 py-4">{children}</main>
+          <main className="px-4 py-4">
+            {children} <ChatToggle />
+          </main>
         </ThemeProvider>
       </body>
     </html>
