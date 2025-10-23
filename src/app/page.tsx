@@ -1,4 +1,5 @@
 import CoinTable from "@/components/CoinTable";
+import TopCoinsPage from "@/components/TopCoinsPage";
 
 export const revalidate = 60; // ISR every 1 min
 
@@ -16,9 +17,5 @@ export default async function Page() {
     coins = []; // fallback to empty array
   }
 
-  return (
-    <main className="p-6">
-      <CoinTable coins={coins} />
-    </main>
-  );
+  return <TopCoinsPage initialCoins={coins} />;
 }
