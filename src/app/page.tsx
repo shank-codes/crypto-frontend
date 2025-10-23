@@ -1,7 +1,16 @@
-import Image from "next/image";
+import CoinTable from "@/components/CoinTable";
 
-export default function Home() {
+export const revalidate = 60; // ISR every 1 min
+
+export default async function Page() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/coins`, {
+    next: { revalidate: 60 },
+  });
+  const coins = await res.json();
+
   return (
-    <div>Hello World!</div>
+    <main className="p-6">
+      <CoinTable coins={coins} />
+    </main>
   );
 }
